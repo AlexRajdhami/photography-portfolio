@@ -16,27 +16,53 @@ const photo = (id: string) => PHOTOS.find((p) => p.id === id)!;
 export function Hero() {
   const p = photo('sunset');
   return (
-    <section id="top" className="relative flex min-h-[100svh] items-end overflow-hidden">
+    // Phones: full-screen photo behind the text (suits a portrait photo).
+    // Desktop: editorial split – text on the left, the whole photo on the right, uncropped.
+    <section id="top" className="relative flex min-h-[100svh] items-end overflow-hidden lg:items-center">
       <motion.img
-        src={imgSrc(p.file, 2000)}
+        src={imgSrc(p.file, 1280)}
         srcSet={imgSrcSet(p.file)}
         sizes="100vw"
-        alt={p.alt}
+        alt=""
+        aria-hidden
         fetchPriority="high"
-        className="absolute inset-0 h-full w-full object-cover object-[center_60%]"
+        className="absolute inset-0 h-full w-full object-cover object-[center_60%] lg:hidden"
         initial={{ scale: 1.08 }}
         animate={{ scale: 1 }}
         transition={{ duration: 2.4, ease: 'easeOut' }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/80" />
-      <motion.div {...reveal} className="relative mx-auto w-full max-w-6xl px-4 pb-20 md:px-6 md:pb-28">
-        <p className="mb-4 text-xs uppercase tracking-[0.3em] text-white/80">{STUDIO.tagline}</p>
-        <h1 className="max-w-3xl font-serif text-5xl leading-[1.05] md:text-7xl">Honest photos of the moments that matter.</h1>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <a href="#booking" className="rounded-full bg-white px-7 py-3 text-sm text-neutral-900 transition hover:bg-neutral-200">Book a shoot</a>
-          <a href="#portfolio" className="rounded-full border border-white/50 px-7 py-3 text-sm transition hover:bg-white/10">View portfolio</a>
-        </div>
-      </motion.div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/85 lg:hidden" />
+
+      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 pb-20 md:px-6 md:pb-28 lg:grid-cols-[1.1fr_0.9fr] lg:pb-0 lg:pt-24">
+        <motion.div {...reveal}>
+          <p className="mb-4 text-xs uppercase tracking-[0.3em] text-white/80">{STUDIO.tagline}</p>
+          <h1 className="max-w-3xl font-serif text-5xl leading-[1.05] md:text-7xl">Honest photos of the moments that matter.</h1>
+          <p className="mt-6 hidden max-w-md leading-relaxed text-white/70 lg:block">
+            Golden-hour couples, quiet black and white details and natural-light portraits across {STUDIO.location}.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a href="#booking" className="rounded-full bg-white px-7 py-3 text-sm text-neutral-900 transition hover:bg-neutral-200">Book a shoot</a>
+            <a href="#portfolio" className="rounded-full border border-white/50 px-7 py-3 text-sm transition hover:bg-white/10">View portfolio</a>
+          </div>
+        </motion.div>
+
+        <motion.figure
+          className="relative hidden lg:block"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
+        >
+          <img
+            src={imgSrc(p.file, 1280)}
+            srcSet={imgSrcSet(p.file)}
+            sizes="40vw"
+            alt={p.alt}
+            fetchPriority="high"
+            className="ml-auto max-h-[78vh] w-auto rounded-lg object-contain shadow-2xl shadow-black/60"
+          />
+          <figcaption className="mt-3 text-right text-xs uppercase tracking-[0.2em] text-white/40">{p.title} · {p.category}</figcaption>
+        </motion.figure>
+      </div>
     </section>
   );
 }
